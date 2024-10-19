@@ -239,3 +239,63 @@ function addQuote() {
     }
 }
 
+// Fetch data from a simulated server (e.g., JSONPlaceholder)
+async function fetchQuotesFromServer() {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts'); // Simulating quote data
+        const serverQuotes = await response.json();
+
+        // Add server data to local storage if it doesn't already exist
+        const localQuotes = JSON.parse(localStorage.getItem('quotes') || '[]');
+        const updatedQuotes = mergeQuotes(localQuotes, serverQuotes);
+        localStorage.setItem('quotes', JSON.stringify(updatedQuotes));
+        
+        // Update the UI after sync
+        filterQuotes();
+    } catch (error) {
+        console.error("Failed to fetch quotes from server:", error);
+    }
+}
+
+// Check for new quotes from the server every 5 minutes
+setInterval(fetchQuotesFromServer, 300000); // 300,000 ms = 5 minutes
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchQuotesFromServer(); // Sync data when page loads
+    loadSelectedCategory();  // Restore user filter
+    populateCategories();    // Populate categories
+    filterQuotes();          // Filter displayed quotes
+});
+
+function mergeQuotes(localQuotes, serverQuotes) {
+    const mergedQuotes = [...localQuotes]; // Start with local data
+
+    // Add server quotes if they don't exist locally
+    serverQuotes.forEach(serverQuote => {
+        const exists = localQuotes.some(localQuote => localQuote.id === serverQuote.id);
+        if (!exists) {
+            mergedQuotes.push(serverQuote); // Add the server quote
+        }
+    });
+
+    return mergedQuotes;
+}
+
+function resolveConflict(localQuote, serverQuote) {
+    // Basic conflict resolution: overwrite local data
+    if (localQuote.updatedAt < serverQuote.updatedAt) {
+        return serverQuote; // Server data takes precedence
+    }
+    return localQuote;
+}
+
+function notifyUser(message) {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.backgroundColor = '#ffc107';
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
