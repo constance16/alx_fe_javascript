@@ -19,7 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function showRandomQuote() {
       const randomIndex = Math.floor(Math.random() * quotes.length);
       const randomQuote = quotes[randomIndex];
-      quoteDisplay.textContent = `"${randomQuote.text}" - Category: ${randomQuote.category}`;
+  
+      // Use innerHTML to display the quote with some styling
+      quoteDisplay.innerHTML = `<p>"${randomQuote.text}"</p><small>Category: ${randomQuote.category}</small>`;
     }
   
     // Add event listener to the "Show New Quote" button
@@ -43,11 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
       newQuoteText.value = '';
       newQuoteCategory.value = '';
   
-      // Optional: Display a success message
-      alert("New quote added successfully!");
-  
-      // Optionally, display the newly added quote immediately
-      quoteDisplay.textContent = `"${newQuote.text}" - Category: ${newQuote.category}`;
+      // Optional: Display a success message using innerHTML
+      quoteDisplay.innerHTML = `<p>New quote added successfully: <br> "${newQuote.text}"</p><small>Category: ${newQuote.category}</small>`;
     }
   
     // Add event listener to the "Add Quote" button
