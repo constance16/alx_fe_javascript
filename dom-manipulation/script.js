@@ -299,3 +299,60 @@ function notifyUser(message) {
         notification.remove();
     }, 3000);
 }
+
+async function postQuoteToServer(quote) {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+            method: 'POST', // Using POST to send data
+            headers: {
+                'Content-Type': 'application/json' // Specifies that the data is in JSON format
+            },
+            body: JSON.stringify(quote) // The data you are sending (converted to a JSON string)
+        });
+
+        const responseData = await response.json(); // Parse the JSON response from the server
+        console.log('Quote added to server:', responseData);
+        
+        // Optionally, notify the user or update the local state/UI
+        notifyUser('Quote successfully added to server!');
+    } catch (error) {
+        console.error('Error adding quote to server:', error);
+        notifyUser('Failed to add quote to server.');
+    }
+}
+
+// Example of calling the function to post a new quote
+const newQuote = {
+    text: "This is a new quote",
+    category: "Motivation",
+    author: "Unknown"
+};
+
+postQuoteToServer(newQuote);
+
+function addQuote() {
+    const quoteText = document.getElementById('newQuoteText').value;
+    const quoteCategory = document.getElementById('newQuoteCategory').value;
+
+    if (quoteText && quoteCategory) {
+        const newQuote = {
+            text: quoteText,
+            category: quoteCategory
+        };
+
+        quotes.push(newQuote); // Add to the local array
+        localStorage.setItem('quotes', JSON.stringify(quotes)); // Save to local storage
+
+        // Post the new quote to the server
+        postQuoteToServer(newQuote);
+
+        // Optionally update the UI
+        populateCategories();
+        filterQuotes();
+
+        document.getElementById('newQuoteText').value = '';
+        document.getElementById('newQuoteCategory').value = '';
+    } else {
+        alert('Please fill in both fields');
+    }
+}
