@@ -404,4 +404,33 @@ function notifyUser(message) {
     }, 3000); // Duration in milliseconds (3 seconds)
 }
 
-notifyUser('Quotes synced with the server!');
+async function syncQuotes() {
+    try {
+        const serverResponse = await fetch('https://jsonplaceholder.typicode.com/posts');
+        const serverQuotes = await serverResponse.json();
+        const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
+
+        const mergedQuotes = [...localQuotes];
+
+        serverQuotes.forEach(serverQuote => {
+            const existsLocally = localQuotes.some(localQuote => localQuote.id === serverQuote.id);
+            if (!existsLocally) {
+                mergedQuotes.push({
+                    id: serverQuote.id,
+                    text: serverQuote.title,  // assuming title is the quote text
+                    category: 'general'       // default category for server quotes
+                });
+            }
+        });
+
+        localStorage.setItem('quotes', JSON.stringify(mergedQuotes));
+
+        // Notify user that quotes have been synced
+        notifyUser('Quotes synced with server!');
+        filterQuotes(); // Refresh displayed quotes
+
+    } catch (error) {
+        console.error('Error syncing quotes:', error);
+        notifyUser('Failed to sync quotes. Please try again.');
+    }
+}
