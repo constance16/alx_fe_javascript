@@ -358,17 +358,12 @@ function addQuote() {
 }
 
 
-// Function to sync quotes between local storage and the server
 async function syncQuotes() {
     try {
-        // Step 1: Fetch quotes from the server (mock API used here)
         const serverResponse = await fetch('https://jsonplaceholder.typicode.com/posts');
         const serverQuotes = await serverResponse.json();
-
-        // Step 2: Fetch locally stored quotes
         const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
 
-        // Step 3: Resolve conflicts by merging quotes from the server that don't exist locally
         const mergedQuotes = [...localQuotes];
 
         serverQuotes.forEach(serverQuote => {
@@ -382,19 +377,14 @@ async function syncQuotes() {
             }
         });
 
-        // Step 4: Update local storage with the merged quotes
         localStorage.setItem('quotes', JSON.stringify(mergedQuotes));
 
-        // Step 5: Notify the user about successful sync
-        notifyUser('Quotes successfully synced with the server!');
-        filterQuotes(); // Refresh the displayed quotes after sync
+        // Notify user that quotes have been synced
+        notifyUser('Quotes synced with the server!');
+        filterQuotes(); // Refresh displayed quotes
 
     } catch (error) {
         console.error('Error syncing quotes:', error);
         notifyUser('Failed to sync quotes. Please try again.');
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    syncQuotes(); // Sync on page load
-});
