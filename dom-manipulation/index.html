@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic Quote Generator</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Quote Generator</title>
 </head>
 <body>
-  <h1>Dynamic Quote Generator</h1>
+    <h1>Dynamic Quote Generator</h1>
 
-  <!-- Display for the quote -->
-  <div id="quoteDisplay">Click 'Show New Quote' to display a quote</div>
-  
-  <!-- Button to trigger new quote -->
-  <button id="newQuote">Show New Quote</button>
+    <!-- Display for the randomly generated quotes -->
+    <div id="quoteDisplay"></div>
+    
+    <!-- Button to show a new random quote -->
+    <button id="newQuote">Show New Quote</button>
 
-  <!-- Form to add a new quote -->
-  <div>
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote">
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category">
-    <button id="addQuoteBtn">Add Quote</button>
-  </div>
+    <!-- Form for adding new quotes -->
+    <div>
+        <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+        <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+        <button id="addQuoteBtn">Add Quote</button>
+    </div>
 
-  <script src="script.js"></script>
+    <!-- New section to export and import quotes -->
+    <div>
+        <!-- Button to export quotes to JSON -->
+        <button id="exportQuotesBtn">Export Quotes</button>
+
+        <!-- File input to import quotes from a JSON file -->
+        <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+    </div>
+
+    <!-- Include the JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>
