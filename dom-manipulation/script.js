@@ -388,3 +388,20 @@ async function syncQuotes() {
         notifyUser('Failed to sync quotes. Please try again.');
     }
 }
+
+// Function to display user notifications
+function notifyUser(message) {
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.innerHTML = message;
+
+    // Append the notification to the body (or a specific container)
+    document.body.appendChild(notification);
+
+    // Remove the notification after a few seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 3000); // Duration in milliseconds (3 seconds)
+}
+
+notifyUser('Quotes synced with the server!');
